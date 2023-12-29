@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 # Read the current version from version.txt
 with open('version.txt', 'r') as file:
@@ -14,8 +15,9 @@ with open('version.txt', 'w') as file:
     file.write(new_version)
 
 # Commit the changes to the repository
-os.system('git config --global user.name "GitHub Actions"')
-os.system('git config --global user.email "actions@github.com"')
-os.system('git add version.txt')
-os.system(f'git commit -m "Increment version to {new_version}"')
-os.system('git push')
+subprocess.run(['git', 'config', '--global', 'user.name', 'GitHub Actions'])
+subprocess.run(['git', 'config', '--global', 'user.email', 'actions@github.com'])
+subprocess.run(['git', 'add', 'version.txt'])
+subprocess.run(['git', 'commit', '-m', f'Increment version to {new_version}'])
+token = os.getenv('GITHUB_TOKEN')
+subprocess.run(['git', 'push', f'https://{token}@github.com/mikkeyboi/webcam_stream_incubation.git'])
