@@ -7,21 +7,33 @@ on:
 jobs:
   increment-version:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.PAT }}
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
 
-      - name: Increment version
-        run: python increment_version.py
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+    - name: Increment version
+      run: python increment_version.py
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        git add version.txt
+        git commit -m "Increment version"
+        git push
